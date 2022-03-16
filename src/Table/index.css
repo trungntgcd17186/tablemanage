@@ -1,0 +1,21 @@
+.ant-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-created {
+  width: 100px;
+  text-align: center;
+  height: 54px;
+}
+
+.status {
+  width: 80px;
+  background-color: #eaf7fa;
+  color: #008dff;
+  text-align: center;
+  border: 1px solid #008dff;
+  border-radius: 3px;
+  font-weight: 500;
+}
