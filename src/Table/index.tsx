@@ -1,8 +1,8 @@
-import { Table, Row, Col, Select, Button, Input, DatePicker } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteFilled, SearchOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Input, Row, Select, Table } from "antd";
 import "antd/dist/antd.css";
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import "./index.css";
 
 const rowSelection = {
@@ -29,21 +29,46 @@ export default function TableContent() {
     {
       title: () => {
         return (
-          <div style={{ textAlign: "center" }}>
-            Quote ID
-            <Input />
-          </div>
+          <div style={{ textAlign: "center", height: "54px" }}>Quote ID</div>
         );
       },
       dataIndex: "key",
       key: "key",
-      render(text: any) {
+      render(text: string) {
         return {
           props: {
             style: { color: "#008DFF" },
           },
-          children: <span>{text ? text.slice(0, 9) : ""}</span>,
+          children: <span>{text}</span>,
         };
+      },
+      //Xử lý search theo ID
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }: any) => {
+        return (
+          <>
+            <Input
+              autoFocus
+              placeholder="Search ID"
+              value={selectedKeys[0]}
+              onChange={(e) => {
+                setSelectedKeys(e.target.value ? [e.target.value] : []);
+                confirm({ closeDropdown: false });
+              }}
+              onPressEnter={() => {
+                confirm();
+              }}
+              onBlur={() => {
+                confirm();
+              }}
+            />
+          </>
+        );
+      },
+      filterIcon: () => {
+        return <SearchOutlined />;
+      },
+      onFilter: (value: any, record: any) => {
+        return record.key.toLowerCase().includes(value.toLowerCase());
       },
     },
     {
@@ -53,15 +78,45 @@ export default function TableContent() {
             style={{
               width: "150px",
               textAlign: "center",
+              height: "54px",
             }}
           >
             Care Recipient Name
-            <Input />
           </div>
         );
       },
       dataIndex: "care_recipient_name",
       key: "care_recipient_name",
+      //Xử lý search theo Name
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }: any) => {
+        return (
+          <>
+            <Input
+              autoFocus
+              placeholder="Search Name"
+              value={selectedKeys[0]}
+              onChange={(e) => {
+                setSelectedKeys(e.target.value ? [e.target.value] : []);
+                confirm({ closeDropdown: false });
+              }}
+              onPressEnter={() => {
+                confirm();
+              }}
+              onBlur={() => {
+                confirm();
+              }}
+            />
+          </>
+        );
+      },
+      filterIcon: () => {
+        return <SearchOutlined />;
+      },
+      onFilter: (value: any, record: any) => {
+        return record.care_recipient_name
+          .toLowerCase()
+          .includes(value.toLowerCase());
+      },
     },
     {
       title: () => {
@@ -104,7 +159,7 @@ export default function TableContent() {
       },
       dataIndex: "rate",
       key: "rate",
-      render(text: any) {
+      render(text: number) {
         return {
           props: {
             style: { textAlign: "right" },
@@ -125,7 +180,7 @@ export default function TableContent() {
             }}
           >
             Short Term
-            <Select onChange={handleChangeInput}>
+            <Select onChange={handleChangeShortTerm}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -134,7 +189,7 @@ export default function TableContent() {
       },
       dataIndex: "short_temp",
       key: "short_temp",
-      render(text: any) {
+      render(text: boolean) {
         return {
           props: {
             style: {
@@ -158,7 +213,7 @@ export default function TableContent() {
             }}
           >
             Contagion
-            <Select onChange={handleChangeInput}>
+            <Select onChange={handleChangeContagion}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -167,7 +222,7 @@ export default function TableContent() {
       },
       dataIndex: "contagion",
       key: "contagion",
-      render(text: any) {
+      render(text: boolean) {
         return {
           props: {
             style: {
@@ -191,7 +246,7 @@ export default function TableContent() {
             }}
           >
             Emergency
-            <Select onChange={handleChangeInput}>
+            <Select onChange={handleChangeEmergency}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -200,7 +255,7 @@ export default function TableContent() {
       },
       dataIndex: "emergency",
       key: "emergency",
-      render(text: any) {
+      render(text: boolean) {
         return {
           props: {
             style: {
@@ -224,7 +279,7 @@ export default function TableContent() {
             }}
           >
             Mileage Surcharge
-            <Select onChange={handleChangeInput}>
+            <Select onChange={handleChangeMileageSurcharge}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -233,7 +288,7 @@ export default function TableContent() {
       },
       dataIndex: "mileage_surcharge",
       key: "mileage_surcharge",
-      render(text: any) {
+      render(text: boolean) {
         return {
           props: {
             style: {
@@ -257,7 +312,7 @@ export default function TableContent() {
             }}
           >
             Primary Quote
-            <Select onChange={handleChangeInput}>
+            <Select onChange={handleChangePrimaryQuote}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -266,7 +321,7 @@ export default function TableContent() {
       },
       dataIndex: "primary_quote",
       key: "primary_quote",
-      render(text: any) {
+      render(text: boolean) {
         return {
           props: {
             style: {
@@ -315,7 +370,7 @@ export default function TableContent() {
           new Date(b.created_date).getTime()
         );
       },
-      render(text: any) {
+      render(text: IDataType) {
         return {
           props: {
             style: { textAlign: "right" },
@@ -359,7 +414,11 @@ export default function TableContent() {
             }}
           >
             Status
-            <Select showSearch placeholder="Select a status">
+            <Select
+              showSearch
+              placeholder="Select a status"
+              onChange={handleChangeStatus}
+            >
               <Option value="new">new</Option>
               <Option value="approved">approved</Option>
               <Option value="rejected">rejected</Option>
@@ -381,39 +440,132 @@ export default function TableContent() {
     },
     {
       title: "...",
-      render: () => <DeleteOutlined />,
+      render: () => <DeleteFilled style={{ color: "orange" }} />,
     },
   ];
 
-  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
+  const handleChangeShortTerm = (e: string) => {
+    if (e === "yes") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.short_temp === true
+      );
+      setDatas(newData);
+    }
+    if (e === "no") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.short_temp === false
+      );
+      setDatas(newData);
+    }
+  };
 
-    const newData: IDataType[] = datas.filter(
-      (data) => data.short_temp === true
-    );
-    setDatas(newData);
+  const handleChangeContagion = (e: string) => {
+    if (e === "yes") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.contagion === true
+      );
+      setDatas(newData);
+    }
+    if (e === "no") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.contagion === false
+      );
+      setDatas(newData);
+    }
+  };
+
+  const handleChangeEmergency = (e: string) => {
+    if (e === "yes") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.emergency === true
+      );
+      setDatas(newData);
+    }
+    if (e === "no") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.emergency === false
+      );
+      setDatas(newData);
+    }
+  };
+
+  const handleChangePrimaryQuote = (e: string) => {
+    if (e === "yes") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.primary_quote === true
+      );
+      setDatas(newData);
+    }
+    if (e === "no") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.primary_quote === false
+      );
+      setDatas(newData);
+    }
+  };
+
+  const handleChangeMileageSurcharge = (e: string) => {
+    if (e === "yes") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.mileage_surcharge === true
+      );
+      setDatas(newData);
+    }
+    if (e === "no") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.mileage_surcharge === false
+      );
+      setDatas(newData);
+    }
+  };
+
+  const handleChangeStatus = (e: string) => {
+    console.log(e);
+    if (e === "new") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.status === "new"
+      );
+      setDatas(newData);
+    }
+    if (e === "approved") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.status === "approved"
+      );
+      setDatas(newData);
+    }
+    if (e === "rejected") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.status === "rejected"
+      );
+      setDatas(newData);
+    }
+    if (e === "closed") {
+      const newData: IDataType[] = datas.filter(
+        (data) => data.status === "closed"
+      );
+      setDatas(newData);
+    }
   };
 
   const { Option } = Select;
-  function handleChange(value: any) {
+  function handleChange(value: string) {
     console.log(`selected ${value}`);
   }
-
   return (
     <div>
       <Row>
         <Col span="8">
           {" "}
           <Select
-            defaultValue="Bulk Action"
-            style={{ width: "70%", textAlign: "left" }}
+            defaultValue="Change Status"
+            style={{ width: "68%", textAlign: "left" }}
             onChange={handleChange}
           >
             <Option value="delete">Delete</Option>
-            <Option value="markAsConverted">Mark as Converted</Option>
-            <Option value="markAsSubmitted">Mark as Submitted</Option>
-            <Option value="markAsDraft">Mark as Draft</Option>
-            <Option value="markAsInvalid">Mark as Invalid</Option>
+            <Option value="markAsConverted">new</Option>
+            <Option value="markAsSubmitted">approved</Option>
+            <Option value="markAsDraft">rejected</Option>
+            <Option value="markAsInvalid">closed</Option>
           </Select>
           <Button>Apply</Button>
         </Col>
