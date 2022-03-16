@@ -20,7 +20,7 @@ export default function TableContent() {
   const selectionType = "checkbox";
 
   useEffect(() => {
-    axios.get("http://localhost:3001/table").then((response) => {
+    axios.get("https://tablemanage.herokuapp.com/table").then((response) => {
       setDatas(response.data);
     });
   }, []);
