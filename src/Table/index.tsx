@@ -2,7 +2,8 @@ import { DeleteFilled, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, DatePicker, Input, Row, Select, Table } from "antd";
 import "antd/dist/antd.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import fetchData from "../api/index";
 import "./index.css";
 
 const rowSelection = {
@@ -17,6 +18,15 @@ const rowSelection = {
 
 export default function TableContent() {
   const [datas, setDatas] = useState<any[]>([]);
+  const [url, setUrl] = useState<string>(
+    "https://tablemanage.herokuapp.com/table?"
+  );
+  const [shortTemp, setShortTemp] = useState<boolean>(true);
+  const [contagion, setContagion] = useState<boolean>();
+  const [emergency, setEmergency] = useState<boolean>(true);
+  const [mileageSurcharge, setMileageSurcharge] = useState<boolean>(true);
+  const [primaryQuote, setPrimaryQuote] = useState<boolean>(true);
+
   const selectionType = "checkbox";
 
   useEffect(() => {
@@ -24,6 +34,8 @@ export default function TableContent() {
       setDatas(response.data);
     });
   }, []);
+
+  const SelectRef = useRef<HTMLDivElement>(null);
 
   const columns = [
     {
@@ -178,6 +190,7 @@ export default function TableContent() {
               width: "80px",
               textAlign: "center",
             }}
+            ref={SelectRef}
           >
             Short Term
             <Select onChange={handleChangeShortTerm}>
@@ -444,83 +457,138 @@ export default function TableContent() {
     },
   ];
 
-  const handleChangeShortTerm = (e: string) => {
+  const handleChangeShortTerm = async (e: string) => {
+    console.log(e);
+    console.log(columns.find((el) => el.key === "short_temp"));
     if (e === "yes") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.short_temp === true
-      );
-      setDatas(newData);
-    }
-    if (e === "no") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.short_temp === false
-      );
-      setDatas(newData);
+      setShortTemp(true);
+      const response = await fetchData({
+        shortTemp: shortTemp,
+        contagion: true,
+        emergency: true,
+        mileageSurcharge: true,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
+    } else if (e === "no") {
+      setShortTemp(false);
+      const response = await fetchData({
+        shortTemp: shortTemp,
+        contagion: true,
+        emergency: true,
+        mileageSurcharge: true,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
   };
 
-  const handleChangeContagion = (e: string) => {
-    if (e === "yes") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.contagion === true
-      );
-      setDatas(newData);
+  const handleChangeContagion = async (e: string) => {
+    if (e == "yes") {
+      setContagion(false);
+      console.log(e);
+
+      console.log(contagion);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
-    if (e === "no") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.contagion === false
-      );
-      setDatas(newData);
+    if (e == "no") {
+      setContagion(true);
+      console.log(e);
+      console.log(contagion);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
   };
 
-  const handleChangeEmergency = (e: string) => {
+  const handleChangeEmergency = async (e: string) => {
     if (e === "yes") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.emergency === true
-      );
-      setDatas(newData);
+      setEmergency(true);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
     if (e === "no") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.emergency === false
-      );
-      setDatas(newData);
+      setEmergency(false);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
   };
 
-  const handleChangePrimaryQuote = (e: string) => {
+  const handleChangePrimaryQuote = async (e: string) => {
     if (e === "yes") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.primary_quote === true
-      );
-      setDatas(newData);
+      setPrimaryQuote(true);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
     if (e === "no") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.primary_quote === false
-      );
-      setDatas(newData);
+      setPrimaryQuote(false);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
   };
 
-  const handleChangeMileageSurcharge = (e: string) => {
+  const handleChangeMileageSurcharge = async (e: string) => {
     if (e === "yes") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.mileage_surcharge === true
-      );
-      setDatas(newData);
+      setMileageSurcharge(true);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
     if (e === "no") {
-      const newData: IDataType[] = datas.filter(
-        (data) => data.mileage_surcharge === false
-      );
-      setDatas(newData);
+      setMileageSurcharge(false);
+      const response = await fetchData({
+        shortTemp: true,
+        contagion: false,
+        emergency: true,
+        mileageSurcharge: false,
+        primaryQuote: true,
+      });
+      setDatas(response.data);
     }
   };
 
   const handleChangeStatus = (e: string) => {
-    console.log(e);
     if (e === "new") {
       const newData: IDataType[] = datas.filter(
         (data) => data.status === "new"

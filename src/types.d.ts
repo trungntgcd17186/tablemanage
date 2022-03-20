@@ -4,7 +4,7 @@ interface IDataType {
   name: string;
   birthday: dateTime;
   rate: number;
-  short_term: boolean;
+  short_temp: boolean;
   contagion: boolean;
   emergency: boolean;
   mileage_surcharge: boolean;
