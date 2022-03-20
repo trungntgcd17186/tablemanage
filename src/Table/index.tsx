@@ -18,14 +18,12 @@ const rowSelection = {
 
 export default function TableContent() {
   const [datas, setDatas] = useState<any[]>([]);
-  const [url, setUrl] = useState<string>(
-    "https://tablemanage.herokuapp.com/table?"
-  );
-  const [shortTemp, setShortTemp] = useState<boolean>(true);
+
+  const [shortTemp, setShortTemp] = useState<boolean>();
   const [contagion, setContagion] = useState<boolean>();
-  const [emergency, setEmergency] = useState<boolean>(true);
-  const [mileageSurcharge, setMileageSurcharge] = useState<boolean>(true);
-  const [primaryQuote, setPrimaryQuote] = useState<boolean>(true);
+  const [emergency, setEmergency] = useState<boolean>();
+  const [mileageSurcharge, setMileageSurcharge] = useState<boolean>();
+  const [primaryQuote, setPrimaryQuote] = useState<boolean>();
 
   const selectionType = "checkbox";
 
@@ -458,27 +456,27 @@ export default function TableContent() {
   ];
 
   const handleChangeShortTerm = async (e: string) => {
-    console.log(e);
-    console.log(columns.find((el) => el.key === "short_temp"));
     if (e === "yes") {
-      setShortTemp(true);
-      const response = await fetchData({
-        shortTemp: shortTemp,
-        contagion: true,
-        emergency: true,
-        mileageSurcharge: true,
-        primaryQuote: true,
-      });
+      setShortTemp(false);
+      console.log(shortTemp);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     } else if (e === "no") {
-      setShortTemp(false);
-      const response = await fetchData({
-        shortTemp: shortTemp,
-        contagion: true,
-        emergency: true,
-        mileageSurcharge: true,
-        primaryQuote: true,
-      });
+      setShortTemp(true);
+      console.log(shortTemp);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
   };
@@ -486,104 +484,101 @@ export default function TableContent() {
   const handleChangeContagion = async (e: string) => {
     if (e == "yes") {
       setContagion(false);
-      console.log(e);
 
-      console.log(contagion);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
     if (e == "no") {
       setContagion(true);
-      console.log(e);
-      console.log(contagion);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
   };
 
   const handleChangeEmergency = async (e: string) => {
     if (e === "yes") {
-      setEmergency(true);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+      setEmergency(false);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
     if (e === "no") {
-      setEmergency(false);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+      setEmergency(true);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
   };
 
   const handleChangePrimaryQuote = async (e: string) => {
     if (e === "yes") {
-      setPrimaryQuote(true);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+      setPrimaryQuote(false);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
     if (e === "no") {
-      setPrimaryQuote(false);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+      setPrimaryQuote(true);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
   };
 
   const handleChangeMileageSurcharge = async (e: string) => {
     if (e === "yes") {
-      setMileageSurcharge(true);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+      setMileageSurcharge(false);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
     if (e === "no") {
-      setMileageSurcharge(false);
-      const response = await fetchData({
-        shortTemp: true,
-        contagion: false,
-        emergency: true,
-        mileageSurcharge: false,
-        primaryQuote: true,
-      });
+      setMileageSurcharge(true);
+      const response = await fetchData(
+        shortTemp,
+        contagion,
+        emergency,
+        mileageSurcharge,
+        primaryQuote
+      );
       setDatas(response.data);
     }
   };
