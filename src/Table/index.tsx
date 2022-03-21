@@ -19,11 +19,13 @@ const rowSelection = {
 export default function TableContent() {
   const [datas, setDatas] = useState<any[]>([]);
 
-  const [shortTemp, setShortTemp] = useState<boolean>();
-  const [contagion, setContagion] = useState<boolean>();
-  const [emergency, setEmergency] = useState<boolean>();
-  const [mileageSurcharge, setMileageSurcharge] = useState<boolean>();
-  const [primaryQuote, setPrimaryQuote] = useState<boolean>();
+  const [obj, setObj] = useState<any>({});
+
+  const [shortTemp, setShortTemp] = useState<any>();
+  const [contagion, setContagion] = useState<any>();
+  const [emergency, setEmergency] = useState<any>();
+  const [mileageSurcharge, setMileageSurcharge] = useState<any>();
+  const [primaryQuote, setPrimaryQuote] = useState<any>();
 
   const selectionType = "checkbox";
 
@@ -257,7 +259,7 @@ export default function TableContent() {
             }}
           >
             Emergency
-            <Select onChange={handleChangeEmergency}>
+            <Select onChange={handleChangeShortTerm}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -290,7 +292,7 @@ export default function TableContent() {
             }}
           >
             Mileage Surcharge
-            <Select onChange={handleChangeMileageSurcharge}>
+            <Select onChange={handleChangeShortTerm}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -323,7 +325,7 @@ export default function TableContent() {
             }}
           >
             Primary Quote
-            <Select onChange={handleChangePrimaryQuote}>
+            <Select onChange={handleChangeShortTerm}>
               <Option value="yes">YES</Option>
               <Option value="no">NO</Option>
             </Select>
@@ -455,133 +457,141 @@ export default function TableContent() {
     },
   ];
 
+  // {
+  //   short_temp: true,
+  //   contagion: false,
+  //   emergency: true,
+  //   mileage_surcharge: false,
+  //   primary_quote: true,
+  // }
+
   const handleChangeShortTerm = async (e: string) => {
     if (e === "yes") {
-      setShortTemp(false);
-      console.log(shortTemp);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
+      setShortTemp(true);
+      setObj({
+        short_temp: shortTemp,
+        contagion: contagion,
+        emergency: emergency,
+        mileage_surcharge: mileageSurcharge,
+        primary_quote: primaryQuote,
+      });
+      console.log(obj);
+
+      const response = await fetchData(obj);
       setDatas(response.data);
     } else if (e === "no") {
-      setShortTemp(true);
-      console.log(shortTemp);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
+      setShortTemp(false);
+      setObj({
+        short_temp: shortTemp,
+        contagion: contagion,
+        emergency: emergency,
+        mileage_surcharge: mileageSurcharge,
+        primary_quote: primaryQuote,
+      });
+      console.log(obj);
+      const response = await fetchData(obj);
       setDatas(response.data);
     }
   };
 
   const handleChangeContagion = async (e: string) => {
     if (e == "yes") {
-      setContagion(false);
+      setContagion(true);
+      setObj({
+        ...obj,
+        contagion: true,
+      });
 
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
+      const response = await fetchData(obj);
       setDatas(response.data);
     }
     if (e == "no") {
-      setContagion(true);
+      setContagion(false);
+      setObj({
+        ...obj,
+        contagion: false,
+      });
 
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
+      console.log(obj);
+      const response = await fetchData(obj);
       setDatas(response.data);
     }
   };
 
-  const handleChangeEmergency = async (e: string) => {
-    if (e === "yes") {
-      setEmergency(false);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
-      setDatas(response.data);
-    }
-    if (e === "no") {
-      setEmergency(true);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
-      setDatas(response.data);
-    }
-  };
+  // const handleChangeEmergency = async (e: string) => {
+  //   if (e === "yes") {
+  //     setEmergency(false);
+  //     const response = await fetchData(
+  //       shortTemp,
+  //       contagion,
+  //       emergency,
+  //       mileageSurcharge,
+  //       primaryQuote
+  //     );
+  //     setDatas(response.data);
+  //   }
+  //   if (e === "no") {
+  //     setEmergency(true);
+  //     const response = await fetchData(
+  //       shortTemp,
+  //       contagion,
+  //       emergency,
+  //       mileageSurcharge,
+  //       primaryQuote
+  //     );
+  //     setDatas(response.data);
+  //   }
+  // };
 
-  const handleChangePrimaryQuote = async (e: string) => {
-    if (e === "yes") {
-      setPrimaryQuote(false);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
-      setDatas(response.data);
-    }
-    if (e === "no") {
-      setPrimaryQuote(true);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
-      setDatas(response.data);
-    }
-  };
+  // const handleChangePrimaryQuote = async (e: string) => {
+  //   if (e === "yes") {
+  //     setPrimaryQuote(false);
+  //     const response = await fetchData(
+  //       shortTemp,
+  //       contagion,
+  //       emergency,
+  //       mileageSurcharge,
+  //       primaryQuote
+  //     );
+  //     setDatas(response.data);
+  //   }
+  //   if (e === "no") {
+  //     setPrimaryQuote(true);
+  //     const response = await fetchData(
+  //       shortTemp,
+  //       contagion,
+  //       emergency,
+  //       mileageSurcharge,
+  //       primaryQuote
+  //     );
+  //     setDatas(response.data);
+  //   }
+  // };
 
-  const handleChangeMileageSurcharge = async (e: string) => {
-    if (e === "yes") {
-      setMileageSurcharge(false);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
-      setDatas(response.data);
-    }
-    if (e === "no") {
-      setMileageSurcharge(true);
-      const response = await fetchData(
-        shortTemp,
-        contagion,
-        emergency,
-        mileageSurcharge,
-        primaryQuote
-      );
-      setDatas(response.data);
-    }
-  };
+  // const handleChangeMileageSurcharge = async (e: string) => {
+  //   if (e === "yes") {
+  //     setMileageSurcharge(false);
+  //     const response = await fetchData(
+  //       shortTemp,
+  //       contagion,
+  //       emergency,
+  //       mileageSurcharge,
+  //       primaryQuote
+  //     );
+  //     setDatas(response.data);
+  //   }
+  //   if (e === "no") {
+  //     setMileageSurcharge(true);
+  //     const response = await fetchData(
+  //       shortTemp,
+  //       contagion,
+  //       emergency,
+  //       mileageSurcharge,
+  //       primaryQuote
+  //     );
+  //     setDatas(response.data);
+  //   }
+  // };
 
   const handleChangeStatus = (e: string) => {
     if (e === "new") {
